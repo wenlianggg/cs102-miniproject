@@ -274,12 +274,11 @@ public class BrosMenu {
         facilityDao.add(new Facility("F007", "Room 2-7", 16, 2));
 
         try {
-            BookingResult br = bookingDao.add(studentDao.retrieve("raini"), facilityDao.retrieve("F005"), "28/09/2016 16:05", "14/11/2016 15:00", 2);
-            System.out.println(br);   
-            bookingDao.add(studentDao.retrieve("hyun"), facilityDao.retrieve("F006"), "28/09/2016 16:05", "14/11/2016 15:00", 2);
+            bookingDao.add(studentDao.retrieve("raini"), facilityDao.retrieve("F005"), "28/09/2016 16:05", "14/11/2016 15:00", 2);
+            bookingDao.add(studentDao.retrieve("hyun"),  facilityDao.retrieve("F006"), "28/09/2016 16:05", "14/11/2016 15:00", 2);
             bookingDao.add(studentDao.retrieve("aaron"), facilityDao.retrieve("F003"), "29/09/2016 16:06", "15/11/2016 13:00", 1);
             bookingDao.add(studentDao.retrieve("aaron"), facilityDao.retrieve("F003"), "29/09/2016 16:06", "18/11/2016 18:00", 2);
-            bookingDao.add(studentDao.retrieve("simi"), facilityDao.retrieve("F001"), "30/09/2016 17:00", "19/11/2016 10:00", 3);
+            bookingDao.add(studentDao.retrieve("simi"),  facilityDao.retrieve("F001"), "30/09/2016 17:00", "19/11/2016 10:00", 3);
         } catch (StudentNotFoundException e) {
             System.out.println("Student not found while creating dummy data");
         } catch (FacilityNotFoundException e) {
