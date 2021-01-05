@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import Exceptions.FacilityNotFoundException;
@@ -30,9 +31,14 @@ public class BrosMenu {
         int choice = 0;
 
         while (choice != 7) {
-            printMenu();
-            choice = askChoice();
-            evalChoice(choice);
+            try {
+                printMenu();
+                choice = askChoice();
+                evalChoice(choice);
+            } catch (InputMismatchException e) {
+                System.out.println("Unrecognised input, please try again!");
+                sc.nextLine();
+            }
         }
 
         sc.close();
@@ -87,7 +93,13 @@ public class BrosMenu {
 
     // Menu choice 1
     void printAllStudents() {
+
         ArrayList<Student> allStudents = studentDao.retrieveAll();
+        if (allStudents.isEmpty()) {
+            System.out.println("There is no student");
+            return;
+        }
+
         int serial = 1;
         String fmt = "%-3s %-12s %-15s %-10s\n";
 
@@ -107,7 +119,13 @@ public class BrosMenu {
 
     // Menu choice 2
     void printAllFacilities() {
+
         ArrayList<Facility> allFacilities = facilityDao.retrieveAll();
+        if (allFacilities.isEmpty()) {
+            System.out.println("There is no facility");
+            return;
+        }
+
         int serial = 1;
         String fmt = "%-3s %-7s %-15s %-10s\n";
 
@@ -127,9 +145,14 @@ public class BrosMenu {
 
     // Menu choice 3
     void printAllBookings() {
-        ArrayList<Booking> allBookings = bookingDao.retrieveAll();
-        String fmt = "%-15s %-18s %-18s %-10s %-15s\n";
 
+        ArrayList<Booking> allBookings = bookingDao.retrieveAll();
+        if (allBookings.isEmpty()) {
+            System.out.println("There is no booking.");
+            return;
+        }
+
+        String fmt = "%-15s %-18s %-18s %-10s %-15s\n";
         System.out.printf("\n== BROS :: List all Bookings ==\n\n");
         System.out.printf(fmt, "Facility", "Booking DateTime", "Start DateTime", "Duration", "Student");
         for (Booking b : allBookings) {
@@ -151,8 +174,12 @@ public class BrosMenu {
         studentName = sc.next();
 
         ArrayList<Booking> allBookings = bookingDao.retrieve(studentName);
-        String fmt = "%-15s %-18s %-18s %-10s %-15s\n";
+        if (allBookings.isEmpty()) {
+            System.out.println("The student has not made any booking");
+            return;
+        }
 
+        String fmt = "%-15s %-18s %-18s %-10s %-15s\n";
         System.out.printf("\n== BROS :: List all Bookings By %s ==\n\n", studentName);
         System.out.printf(fmt, "Facility", "Booking DateTime", "Start DateTime", "Duration", "Student");
         for (Booking b : allBookings) {
@@ -177,7 +204,7 @@ public class BrosMenu {
         userName = sc.next();
 
         if (studentDao.contains(userName)) {
-            System.out.println("Student already exists.");
+            System.out.println("Username not available.");
             return;
         }
 
@@ -204,36 +231,42 @@ public class BrosMenu {
         String facilityId = "";
         String startDateTime = "";
         int hours = 0;
-        
-        System.out.printf("Enter username > ");
-        username = sc.nextLine();
-        System.out.printf("Enter facility ID > ");
-        facilityId = sc.nextLine();
-        System.out.printf("Enter start date > ");
-        startDateTime += sc.nextLine();
-        System.out.printf("Enter start time (HH:00) > ");
-        startDateTime += " " + sc.nextLine();
-        System.out.printf("Enter number of hours > ");
-        hours = sc.nextInt();
-
+    
         Student stud = null;
         Facility faci = null;
         BookingResult rslt = null;
-
-        try {
-
-            stud = studentDao.retrieve(username);
-            faci = facilityDao.retrieve(facilityId);
-            String bookingDate = new BrosDate().toString();
-            rslt = bookingDao.add(stud, faci, bookingDate, startDateTime, hours);
-
-        } catch (StudentNotFoundException e) {
-            System.out.printf("Student \"%s\" was not found.\n", username);
-            return;
-        } catch (FacilityNotFoundException e) {
-            System.out.printf("Facility \"%s\" was not found.\n", facilityId);
-            return;
+        
+        while (stud == null) {
+            System.out.printf("Enter username > ");
+            username = sc.nextLine();
+            try {
+                stud = studentDao.retrieve(username);
+            } catch (StudentNotFoundException e) {
+                System.out.printf("Student \"%s\" was not found.\n", username);
+            }
         }
+
+        while (faci == null) {
+            System.out.printf("Enter facility ID > ");
+            facilityId = sc.nextLine();
+            try {
+                faci = facilityDao.retrieve(facilityId);
+            } catch (FacilityNotFoundException e) {
+                System.out.printf("Facility \"%s\" was not found.\n", facilityId);
+            }
+        }
+
+        System.out.printf("Enter start date > ");
+        startDateTime += sc.nextLine();
+
+        System.out.printf("Enter start time (HH:00) > ");
+        startDateTime += " " + sc.nextLine();
+
+        System.out.printf("Enter number of hours > ");
+        hours = sc.nextInt();
+
+        String bookingDate = new BrosDate().toString();
+        rslt = bookingDao.add(stud, faci, bookingDate, startDateTime, hours);
 
         switch(rslt) {
             case OK:
@@ -260,10 +293,10 @@ public class BrosMenu {
     }
 
     void generateDummyData() {
-        studentDao.add(new Student("raini", "Rainie Yang", 20));
-        studentDao.add(new Student("hyun", "Hyun Bin", 30));
-        studentDao.add(new Student("aaron", "Aaron Yang", 40));
-        studentDao.add(new Student("simi", "Shiela Sim", 50));
+        studentDao.add(new Student("raini", "Rainie Yang", 24));
+        studentDao.add(new Student("hyun", "Hyun Bin", 34));
+        studentDao.add(new Student("aaron", "Aaron Yang", 46));
+        studentDao.add(new Student("simi", "Shiela Sim", 56));
 
         facilityDao.add(new Facility("F001", "Room 2-1", 4, 2));
         facilityDao.add(new Facility("F002", "Room 2-2", 6, 2));
