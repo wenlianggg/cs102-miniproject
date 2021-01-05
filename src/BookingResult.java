@@ -2,7 +2,6 @@ public enum BookingResult {
     OK, 
     ALREADY_BOOKED, 
     INSUFFICIENT_BALANCE, 
-    BOOKING_DATE_OVERLAPS, 
     DATE_PARSER_ERROR, 
     INVALID_DURATION_ERROR
 }

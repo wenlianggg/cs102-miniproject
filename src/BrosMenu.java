@@ -55,6 +55,7 @@ public class BrosMenu {
         int input = 0;
         System.out.print("Enter your choice > ");
         input = sc.nextInt();
+        sc.nextLine();
         return input;
     }
 
@@ -197,7 +198,65 @@ public class BrosMenu {
 
     // Menu choice 6
     void bookFacility() {
+        System.out.printf("\n== BROS :: Book a Facility ==\n\n");
 
+        String username = "";
+        String facilityId = "";
+        String startDateTime = "";
+        int hours = 0;
+        
+        System.out.printf("Enter username > ");
+        username = sc.nextLine();
+        System.out.printf("Enter facility ID > ");
+        facilityId = sc.nextLine();
+        System.out.printf("Enter start date > ");
+        startDateTime += sc.nextLine();
+        System.out.printf("Enter start time (HH:00) > ");
+        startDateTime += " " + sc.nextLine();
+        System.out.printf("Enter number of hours > ");
+        hours = sc.nextInt();
+
+        Student stud = null;
+        Facility faci = null;
+        BookingResult rslt = null;
+
+        try {
+
+            stud = studentDao.retrieve(username);
+            faci = facilityDao.retrieve(facilityId);
+            String bookingDate = new BrosDate().toString();
+            rslt = bookingDao.add(stud, faci, bookingDate, startDateTime, hours);
+
+        } catch (StudentNotFoundException e) {
+            System.out.printf("Student \"%s\" was not found.\n", username);
+            return;
+        } catch (FacilityNotFoundException e) {
+            System.out.printf("Facility \"%s\" was not found.\n", facilityId);
+            return;
+        }
+
+        switch(rslt) {
+            case OK:
+                System.out.println("You have successfully booked this facility");
+                System.out.printf("You have %d E$ left\n", stud.getBalance());
+                return;
+            case ALREADY_BOOKED:
+                System.out.println("You cannot make this booking as someone else booked it");
+                return;
+            case INSUFFICIENT_BALANCE:
+                System.out.println("You have insufficient eDollars for this transaction");
+                System.out.printf("Balance: %d E$, Required to book: %d E$\n", stud.getBalance(), hours * faci.getPrice());
+                return;
+            case DATE_PARSER_ERROR:
+                System.out.println("Your date format was incorrect, please use dd/MM/yyyy and HH:00");
+                return;
+            case INVALID_DURATION_ERROR:
+                System.out.println("Your duration has to be a positive integer in hours.");
+                return;
+            default:
+                System.out.println("The system has reached an unknown state.");
+                return;
+        }
     }
 
     void generateDummyData() {
