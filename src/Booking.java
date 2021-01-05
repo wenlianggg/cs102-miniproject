@@ -37,7 +37,7 @@ public class Booking {
         return this.bookingDate;
     }
 
-    int getDuration() {
+    Integer getDuration() {
         return this.duration;
     }
     

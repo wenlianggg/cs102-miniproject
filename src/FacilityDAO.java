@@ -8,13 +8,10 @@ public class FacilityDAO {
 
     FacilityDAO() {
         facilityList = new ArrayList<Facility>();
-        facilityList.add(new Facility("F001", "Room 2-1", 4, 2));
-        facilityList.add(new Facility("F002", "Room 2-2", 6, 2));
-        facilityList.add(new Facility("F003", "Room 2-3", 8, 2));
-        facilityList.add(new Facility("F004", "Room 2-4", 10, 2));
-        facilityList.add(new Facility("F005", "Room 2-5", 12, 2));
-        facilityList.add(new Facility("F006", "Room 2-6", 14, 2));
-        facilityList.add(new Facility("F007", "Room 2-7", 16, 2));
+    }
+
+    void add(Facility f) {
+        facilityList.add(f);
     }
 
     ArrayList<Facility> retrieveAll() {

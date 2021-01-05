@@ -4,14 +4,14 @@ import Exceptions.StudentNotFoundException;
 
 public class StudentDAO {
     
-    ArrayList<Student> studentList;
+    private ArrayList<Student> studentList;
 
     StudentDAO() {
         studentList = new ArrayList<Student>();
-        studentList.add(new Student("raini", "Rainie Yang", 20));
-        studentList.add(new Student("hyun", "Hyun Bin", 30));
-        studentList.add(new Student("aaron", "Aaron Yang", 40));
-        studentList.add(new Student("simi", "Shiela Sim", 50));
+    }
+
+    void add(Student s) {
+        studentList.add(s);
     }
 
     ArrayList<Student> retrieveAll() {
@@ -26,6 +26,16 @@ public class StudentDAO {
         }
 
         throw new StudentNotFoundException();
+    }
+
+    boolean contains(String username) {
+        for (Student s : studentList) {
+            if (s.getUsername().equals(username)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void addStudent(String username, String name, int eDollars) {

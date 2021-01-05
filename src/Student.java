@@ -23,7 +23,7 @@ public class Student {
     }
 
     boolean sufficientBalanceFor(int amt) {
-        return amt > eDollars;
+        return amt <= eDollars;
     }
 
     int deductFromBalance(int amt) {
